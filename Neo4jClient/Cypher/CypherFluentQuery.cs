@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
+using System.Collections;
 
 namespace Neo4jClient.Cypher
 {
@@ -164,6 +165,17 @@ namespace Neo4jClient.Cypher
                 w.AppendClause("MATCH " + string.Join(", ", matchText)));
         }
 
+        public ICypherFluentQuery UsingIndex(string index)
+        {
+            if (string.IsNullOrEmpty(index))
+            {
+                throw new ArgumentException("Index description is required");
+            }
+
+            return Mutate(w =>
+                w.AppendClause("USING INDEX " + index));
+        }
+
         public ICypherFluentQuery OptionalMatch(string pattern)
         {
             return Mutate(w =>
@@ -281,9 +293,14 @@ namespace Neo4jClient.Cypher
             return Mutate(w => w.AppendClause("FOREACH " + text));
         }
 
-        public ICypherFluentQuery Unwind(string collectionName, string columnName)
+        public ICypherFluentQuery Unwind(string collectionName, string identity)
         {
-            return Mutate(w => w.AppendClause(string.Format("UNWIND {0} AS {1}", collectionName, columnName)));
+            return Mutate(w => w.AppendClause(string.Format("UNWIND {0} AS {1}", collectionName, identity)));
+        }
+
+        public ICypherFluentQuery Unwind(IEnumerable collection, string identity)
+        {
+            return Mutate(w => w.AppendClause("UNWIND {0} AS " + identity, collection));
         }
 
         public ICypherFluentQuery Union()
