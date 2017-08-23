@@ -80,7 +80,6 @@ namespace Neo4jClient.Cypher
         /// It does not however cater to anonymous types, as they don't compile
         /// down to traditional object initializers.
         /// 
-        /// <see cref="BuildText(NewExpression, CypherCapabilities, IEnumerable&lt;JsonConverter&gt;)"/> caters to anonymous types.
         /// </remarks>
         static string BuildText(
             MemberInitExpression expression,
